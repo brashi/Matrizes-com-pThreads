@@ -24,13 +24,16 @@ make
 	do
 			for size in 4 16 32 64 128 256 512 1024 2048 #tamanho do problema
 			do   	
-				echo -e "\n$cores\t$size\t\t\c" >> "Pth_Registro_Mat.txt" 
+				echo -e "\n$cores\t$size\t\t\c" >> "Pth_Registro_Mat.txt"
+				printf "\nModo: $cores com lado $size, Tentativa Nº: \n" 
 				for tentativa in $(seq $tentativas) #Cria uma vetor de 1 a "tentativas"
 				do
+					printf " $tentativa -"
 					./MatMulti $size $cores #atualizar de acordo com OpenMP
 				done
 			done
 
 	done
-	 
+	
+	printf "\n - Fim - \n"
 	exit
