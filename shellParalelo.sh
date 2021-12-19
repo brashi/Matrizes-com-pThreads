@@ -27,7 +27,7 @@ make
 				echo -e "\n$cores\t$size\t\t\c" >> "Pth_Registro_Mat.txt" 
 				for tentativa in $(seq $tentativas) #Cria uma vetor de 1 a "tentativas"
 				do
-					./matmulti $size $cores #atualizar de acordo com OpenMP
+					./MatMulti $size $cores #atualizar de acordo com OpenMP
 				done
 			done
 
