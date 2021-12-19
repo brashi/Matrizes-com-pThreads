@@ -78,25 +78,27 @@ int main(int argc, char* argv[]) {
             matC[i][j] = 0;
         }
     }
-    
+    /* Tratamento de dados para paralelo */
+    Dados dados[NumeroThreads];
+    pthread_t* threads;
+    threads = malloc(NumeroThreads * sizeof(pthread_t));
+    for(i = 0; i < NumeroThreads; i++) {
+        dados[i].lado = lado;
+        dados[i].matA = matA;
+        dados[i].matB = matB;
+        dados[i].matC = matC;
+        dados[i].my_rank = i;
+        dados[i].numThread = NumeroThreads;
+    }
+
+    /* Começando a contagem de tempo */
     gettimeofday(&start, 0);
     /* Multiplicação de A x B */
     if(modo == 'S') {
-        
         matMult(matA, matB, matC, lado);
     } else if(modo == 'C') {
-        Dados dados[NumeroThreads];
-        pthread_t* threads;
-        threads = malloc(NumeroThreads * sizeof(pthread_t));
-        
         int  th;
         for(th = 0; th < NumeroThreads; th++) {
-            dados[th].lado = lado;
-            dados[th].matA = matA;
-            dados[th].matB = matB;
-            dados[th].matC = matC;
-            dados[th].my_rank = th;
-            dados[th].numThread = NumeroThreads;
             pthread_create( &threads[th], NULL,
                         Pth_matMult, (void*) &dados[th]);
         }
@@ -104,9 +106,8 @@ int main(int argc, char* argv[]) {
         for(th = 0; th < NumeroThreads; th++) {
             pthread_join(threads[th], NULL);
         }
-
-        free(threads);
     }
+    /* Fim da contagem do tempo */
     gettimeofday(&stop, 0);
 
     /* Impressão de resultados */
@@ -126,6 +127,7 @@ int main(int argc, char* argv[]) {
 	
 	fclose(fout);
 
+    free(threads);
     free(matA[0]);
     free(matB[0]);
     free(matC[0]);

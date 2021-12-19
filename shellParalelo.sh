@@ -18,19 +18,22 @@ rm Paralelo
 
 make
 
-	tentativas=5 #Quantas vezes o código será executado
+	tentativas=20 #Quantas vezes o código será executado
 
 	for cores in C S #Execução de Serial a Concorrente
 	do
-			for size in 128 256 512 1024 2048 #tamanho do problema
+			for size in 4 16 32 64 128 256 512 1024 2048 #tamanho do problema
 			do   	
-				echo -e "\n$cores\t$size\t\t\c" >> "Pth_Registro_Mat.txt" 
+				echo -e "\n$cores\t$size\t\t\c" >> "Pth_Registro_Mat.txt"
+				printf "\nModo: $cores com lado $size, Tentativa Nº: \n" 
 				for tentativa in $(seq $tentativas) #Cria uma vetor de 1 a "tentativas"
 				do
-					./matmulti $size $cores #atualizar de acordo com OpenMP
+					printf " $tentativa -"
+					./MatMulti $size $cores #atualizar de acordo com OpenMP
 				done
 			done
 
 	done
-	 
+	
+	printf "\n - Fim - \n"
 	exit
